@@ -3,8 +3,8 @@
 #include <iostream>
 
 int main() {
-	SetColorsFromFile();
 	SetRussianEncode();
+	SetColorsFromFile();
 	
 	std::string mainchoice, subchoice, underchoice;
 
@@ -51,7 +51,7 @@ int main() {
 				TakeArrayFromFile(DoubleArr);
 			}
 			else {
-				PrintError(1);
+				PrintError(ERR_INCORRECT_OPTION);
 			}
 		}
 		
@@ -67,7 +67,7 @@ int main() {
 				TakeArrayFromFile(StringArr2);
 			}
 			else {
-				PrintError(1);
+				PrintError(ERR_INCORRECT_OPTION);
 			}
 		}
 
@@ -81,7 +81,7 @@ int main() {
 				TakeArrayFromFile(StringArr1);
 			}
 			else {
-				PrintError(1);
+				PrintError(ERR_INCORRECT_OPTION);
 			}
 		}
 
@@ -103,24 +103,24 @@ int main() {
 			StringResultArr = InverseArray(StringArr1);
 		}
 
-		//Сортировка чисел
+		//Сортировка слов
 		else if (mainchoice == "4") {
 			bool bullshit;
 			AskBTSOrSTB(bullshit);
 			if (bullshit == true || bullshit == false) {
-				DoubleResultArr = SortNumbersOrWords(DoubleArr, bullshit);
+				StringResultArr = SortNumbersOrWords(StringArr1, bullshit);
 			}
 			else {
 				continue;
 			}
 		}
 
-		//Сортировка слов
+		//Сортировка чисел
 		else if (mainchoice == "5") {
 			bool bullshit;
 			AskBTSOrSTB(bullshit);
 			if (bullshit == true || bullshit == false) {
-				StringResultArr = SortNumbersOrWords(StringArr1, bullshit);
+				DoubleResultArr = SortNumbersOrWords(DoubleArr, bullshit);
 			}
 			else {
 				continue;
@@ -135,7 +135,7 @@ int main() {
 		//Обработка ошибки ввода
 		else {
 			if (mainchoice != "0") {
-				PrintError(1);
+				PrintError(ERR_INCORRECT_OPTION);
 			}
 		}
 
