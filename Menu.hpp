@@ -4,8 +4,30 @@
 #include <fstream>
 #include <string>
 #include <Windows.h>
+#define ERR_INCORRECT_OPTION 1
+#define ERR_FILE_DOES_NOT_EXIST 2
+#define ERR_INCORRECT_SIZE 3
+#define ERR_INCORRECT_TYPE 4
 
 std::string colors = "0 - черный\n1 - синий\n2 - зеленый\n3 - голубой\n4 - красный\n5 - лиловый\n6 - желтый\n7 - белый\n8 - серый\n9 - светло-синий\nA - светло-зеленый\nB - светло-голубой\nC - светло-красный\nD - светло-лиловый\nE - светло-желтый\nF - ярко-белый\n";
+
+void PrintError(int code) {
+	system("cls");
+	if (code == ERR_INCORRECT_OPTION) {
+		std::cout << "Введен неверный вариант!\n";
+	}
+	else if (code == ERR_FILE_DOES_NOT_EXIST) {
+		std::cout << "Не существует такого файла!\n";
+	}
+	else if (code == ERR_INCORRECT_SIZE) {
+		std::cout << "Неверный размер массива!\n";
+	}
+	else if (code == ERR_INCORRECT_TYPE) {
+		std::cout << "Неверный тип данных!\n";
+	}
+	system("pause");
+	system("cls");
+}
 
 //Устанавливает русскую кодировку (cp1251 Windows)
 void SetRussianEncode() {
@@ -17,7 +39,7 @@ void SetRussianEncode() {
 void SetColorsFromFile() {
 	std::ifstream fin("settings.txt");
 	if (fin.is_open() == false) {
-		std::cout << "Файла настроек не существует!\n";
+		PrintError(ERR_FILE_DOES_NOT_EXIST);
 		return;
 	}
 
@@ -38,28 +60,24 @@ void TakeArrayFromInput(std::vector<AnyType>& arr) {
 	std::cin >> size;
 	std::cin.ignore();
 
-	if (size < 0) {
-		std::cout << "Ошибка!\n";
-		std::cin.get();
-		return;
-	}
-	else if (size == 0) {
-		std::cout << "Список пуст!\n";
-		std::cin.get();
+	if (size < 0 || size == 0) {
+		PrintError(ERR_INCORRECT_SIZE);
 		return;
 	}
 
-	std::cout << "\nВводите элементы:\n";
+	std::cout << "Вводите элементы:\n";
 	for (int i = 0; i < size; i++) {
 		AnyType temp;
 		if (std::cin >> temp) {
 			arr.push_back(temp);
 		} 
 		else {
-			std::cout << "Ошибка!\n";
+			PrintError(ERR_INCORRECT_TYPE);
+			return;
 		}
 		
 	}
+	std::cin.ignore();
 }
 
 //Взятие массива из файла
@@ -70,6 +88,10 @@ void TakeArrayFromFile(std::vector<AnyType>& arr) {
 	std::getline(std::cin, filepath);
 
 	std::ifstream fin(filepath);
+	if (fin.is_open() == false) {
+		PrintError(ERR_FILE_DOES_NOT_EXIST);
+		return;
+	}
 	AnyType temp;
 	while (fin >> temp) {
 		arr.push_back(temp);
@@ -161,7 +183,7 @@ void SetColorsFromInput() {
 		std::cin >> b;
 	}
 	else {
-		std::cout << "Ошибка!\n";
+		PrintError(ERR_INCORRECT_OPTION);
 		system("pause");
 		return;
 	}
@@ -195,11 +217,20 @@ void SaveAnyArrayToFile(std::vector<AnyType> arr) {
 	fout.close();
 }
 
-void PrintError(int code) {
+void AskBTSOrSTB(bool& a) {
+	std::string b;
 	system("cls");
-	if (code == 1) {
-		std::cout << "Введен неверный вариант!\n";
+	std::cout << "Отсортировать от большего к меньшему или наоборот?\n";
+	std::cout << "1.От большего к меньшему\n";
+	std::cout << "2.От меньшего к большему\n";
+	std::getline(std::cin, b);
+	if (b == "1") {
+		a = true;
 	}
-	system("pause");
-	system("cls");
+	else if (b == "2") {
+		a = false;
+	}
+	else {
+		PrintError(ERR_INCORRECT_OPTION);
+	}
 }
