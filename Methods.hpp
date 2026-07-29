@@ -56,21 +56,3 @@ std::vector<AnyType> UniteWithoutDuplicates(std::vector<AnyType>& arr1, std::vec
 	unique_set.clear();
 	return new_arr;
 }
-
-void AskBTSOrSTB(bool& a) {
-	std::string b;
-	system("cls");
-	std::cout << "Отсортировать от большего к меньшему или наоборот?\n";
-	std::cout << "1.От большего к меньшему\n";
-	std::cout << "2.От меньшего к большему\n";
-	std::getline(std::cin, b);
-	if (b == "1") {
-		a = true;
-	}
-	else if (b == "2") {
-		a = false;
-	}
-	else {
-		PrintError(1);
-	}
-}
