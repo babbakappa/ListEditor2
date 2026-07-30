@@ -221,8 +221,8 @@ void AskBTSOrSTB(bool& a) {
 	std::string b;
 	system("cls");
 	std::cout << "Отсортировать от большего к меньшему или наоборот?\n";
-	std::cout << "1.От большего к меньшему\n";
-	std::cout << "2.От меньшего к большему\n";
+	std::cout << "1.От меньшего к большему\n";
+	std::cout << "2.От большего к меньшему\n";
 	std::getline(std::cin, b);
 	if (b == "1") {
 		a = true;
