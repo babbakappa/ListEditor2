@@ -11,6 +11,17 @@
 
 std::string colors = "0 - черный\n1 - синий\n2 - зеленый\n3 - голубой\n4 - красный\n5 - лиловый\n6 - желтый\n7 - белый\n8 - серый\n9 - светло-синий\nA - светло-зеленый\nB - светло-голубой\nC - светло-красный\nD - светло-лиловый\nE - светло-желтый\nF - ярко-белый\n";
 
+//Проверка существует ли такой вариант (для главного меню)
+bool IfOptionExistsInMain(std::string& option) {
+	std::vector<std::string> options = { "-2", "-1", "0", "1", "2", "3", "4", "5", "6" };
+	for (int i = 0; i < options.size(); i++) {
+		if (options[i] == option) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void PrintError(int code) {
 	system("cls");
 	if (code == ERR_INCORRECT_OPTION) {
@@ -57,26 +68,35 @@ template <class AnyType>
 void TakeArrayFromInput(std::vector<AnyType>& arr) {
 	int size;
 	std::cout << "Введите размер списка: ";
-	std::cin >> size;
-	std::cin.ignore();
+
+	if (!(std::cin >> size)) {
+		PrintError(ERR_INCORRECT_TYPE);
+		std::cin.clear();
+		std::cin.ignore(10000, '\n');
+		return;
+	}
 
 	if (size < 0 || size == 0) {
 		PrintError(ERR_INCORRECT_SIZE);
 		return;
 	}
 
+	std::cin.ignore();
 	std::cout << "Вводите элементы:\n";
 	for (int i = 0; i < size; i++) {
 		AnyType temp;
 		if (std::cin >> temp) {
 			arr.push_back(temp);
-		} 
+		}
 		else {
 			PrintError(ERR_INCORRECT_TYPE);
+			std::cin.clear();
+			std::cin.ignore(10000, '\n');
 			return;
 		}
-		
+
 	}
+
 	std::cin.ignore();
 }
 
@@ -169,22 +189,21 @@ void SetColorsFromInput() {
 	std::cout << "1.Цвет текста\n";
 	std::cout << "2.Цвет фона\n";
 	std::cout << "Выбор: ";
-	char ch;
+	std::string ch;
 	char t = '0';
 	char b = '0';
 	std::cin >> ch;
 	system("cls");
 	std::cout << colors << "\n";
 	std::cout << "Выбор: ";
-	if (ch == '2') {
+	if (ch == "2") {
 		std::cin >> t;
 	}
-	else if (ch == '1') {
+	else if (ch == "1") {
 		std::cin >> b;
 	}
 	else {
 		PrintError(ERR_INCORRECT_OPTION);
-		system("pause");
 		return;
 	}
 	char final_comm[9] = "color   ";
@@ -210,19 +229,26 @@ void SaveAnyArrayToFile(std::vector<AnyType> arr) {
 	std::getline(std::cin, filepath);
 
 	std::ofstream fout(filepath);
-	for (auto p : arr) {
+	for (auto& p : arr) {
 		fout << p << "\n";
 	}
 
 	fout.close();
+
+	system("cls");
+	std::cout << "Данные сохранены в файл " << filepath << "\n";
+	system("pause");
+	system("cls");
 }
 
+//Запрос в каком порядке сортировать список
 void AskBTSOrSTB(bool& a) {
 	std::string b;
 	system("cls");
 	std::cout << "Отсортировать от большего к меньшему или наоборот?\n";
 	std::cout << "1.От меньшего к большему\n";
 	std::cout << "2.От большего к меньшему\n";
+	std::cout << "Выбор: ";
 	std::getline(std::cin, b);
 	if (b == "1") {
 		a = true;
@@ -232,5 +258,9 @@ void AskBTSOrSTB(bool& a) {
 	}
 	else {
 		PrintError(ERR_INCORRECT_OPTION);
+		system("cls");
+		std::cout << "Будет применена сортировка от большего к меньшему\n";
+		system("pause");
+		system("cls");
 	}
 }
