@@ -6,7 +6,7 @@ int main() {
 	SetRussianEncode();
 	SetColorsFromFile();
 	
-	std::string mainchoice, subchoice, underchoice;
+	std::string mainchoice, subchoice, subchoice2;
 
 	do {
 		std::vector<std::string> StringArr1;
@@ -20,8 +20,12 @@ int main() {
 		PrintHead();
 		PrintMenu(mainchoice);
 
+		if (IfOptionExistsInMain(mainchoice) == false) {
+			PrintError(ERR_INCORRECT_OPTION);
+			continue;
+		}
 
-		//Блок обработки запросов -1 и -2
+		//Блок обработки запросов -1, -2 и 0
 
 		//Изменение цветов
 		if (mainchoice == "-1") {
@@ -38,9 +42,13 @@ int main() {
 			continue;
 		}
 
+		//Выход из программы
+		else if (mainchoice == "0") {
+			break;
+		}
 
 		//Блок взятия массива
-		
+
 		//Для чисел
 		if (mainchoice == "5") {
 			AskWhereToTake(subchoice);
@@ -52,9 +60,10 @@ int main() {
 			}
 			else {
 				PrintError(ERR_INCORRECT_OPTION);
+				continue;
 			}
 		}
-		
+
 		//Для двух массивов
 		else if (mainchoice == "2") {
 			AskWhereToTake(subchoice);
@@ -68,6 +77,7 @@ int main() {
 			}
 			else {
 				PrintError(ERR_INCORRECT_OPTION);
+				continue;
 			}
 		}
 
@@ -82,6 +92,31 @@ int main() {
 			}
 			else {
 				PrintError(ERR_INCORRECT_OPTION);
+				continue;
+			}
+		}
+		
+		
+		//Проверка неудач
+		
+		//Для чисел
+		if (mainchoice == "5") {
+			if (DoubleArr.empty()) {
+				continue;
+			}
+		}
+
+		//Для двух массивов
+		else if (mainchoice == "2") {
+			if (StringArr1.empty() || StringArr2.empty()) {
+				continue;
+			}
+		}
+
+		//Для одного массива
+		else {
+			if (StringArr1.empty()) {
+				continue;
 			}
 		}
 
@@ -104,27 +139,18 @@ int main() {
 		}
 
 		//Сортировка слов
+
 		else if (mainchoice == "4") {
-			bool bullshit;
+			bool bullshit = false;
 			AskBTSOrSTB(bullshit);
-			if (bullshit == true || bullshit == false) {
-				StringResultArr = SortNumbersOrWords(StringArr1, bullshit);
-			}
-			else {
-				continue;
-			}
+			StringResultArr = SortNumbersOrWords(StringArr1, bullshit);
 		}
 
 		//Сортировка чисел
 		else if (mainchoice == "5") {
-			bool bullshit;
+			bool bullshit = false;
 			AskBTSOrSTB(bullshit);
-			if (bullshit == true || bullshit == false) {
-				DoubleResultArr = SortNumbersOrWords(DoubleArr, bullshit);
-			}
-			else {
-				continue;
-			}
+			DoubleResultArr = SortNumbersOrWords(DoubleArr, bullshit);
 		}
 
 		//Выбор рандома из массива
@@ -132,25 +158,20 @@ int main() {
 			OneResult = PickRandomFromArray(StringArr1);
 		}
 
-		//Обработка ошибки ввода
-		else {
-			if (mainchoice != "0") {
-				PrintError(ERR_INCORRECT_OPTION);
-			}
-		}
-
-
-		//Очистка массивов заранее для оптимизации
-		DoubleArr.clear();
-		StringArr1.clear();
-		StringArr2.clear();
-
-
 		//Блок вывода массива
 		
 		//Для чисел
 		if (mainchoice == "5") {
-			PrintAnyArray(DoubleResultArr);
+			AskWhereToPut(subchoice2);
+			if (subchoice2 == "1") {
+				PrintAnyArray(DoubleResultArr);
+			}
+			else if (subchoice2 == "2") {
+				SaveAnyArrayToFile(DoubleResultArr);
+			}
+			else {
+				PrintError(ERR_INCORRECT_OPTION);
+			}
 		}
 
 		//Для одного результата
@@ -163,7 +184,16 @@ int main() {
 
 		//Для всего остального
 		else {
-			PrintAnyArray(StringResultArr);
+			AskWhereToPut(subchoice2);
+			if (subchoice2 == "1") {
+				PrintAnyArray(StringResultArr);
+			}
+			else if (subchoice2 == "2") {
+				SaveAnyArrayToFile(StringResultArr);
+			}
+			else {
+				PrintError(ERR_INCORRECT_OPTION);
+			}
 		}
 
 	} while (mainchoice != "0");
